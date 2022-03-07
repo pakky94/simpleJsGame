@@ -21,47 +21,54 @@ function createBlock(divName) {
 
   return {
     div: div,
-    x: x,
-    y: y,
-    width: width,
-    height: height,
+
+    _x: x,
+    get x() {
+      return this._x;
+    },
+    set x(value) {
+      this._x = value;
+      this.div.style.left = `${value}px`;
+    },
+
+    _y: y,
+    get y() {
+      return this._y;
+    },
+    set y(value) {
+      this._y = value;
+      this.div.style.top = `${value}px`;
+    },
+
+    _width: width,
+    get width() {
+      return this._width;
+    },
+    set width(value) {
+      this._width = value;
+      this.div.style.width = `${value}px`;
+    },
+
+    _height: height,
+    get height() {
+      return this._height;
+    },
+    set height(value) {
+      this._height = value;
+      this.div.style.height = `${value}px`;
+    },
 
     moveLeft: function (n) {
-      this.x -= n;
-      this.x = clamp(this.x, 0, screenWidth);
-      this.div.style.left = `${this.x}px`;
+      this.x = clamp(this.x - n, 0, screenWidth);
     },
     moveRight: function (n) {
-      this.x += n;
-      this.x = clamp(this.x, 0, screenWidth);
-      this.div.style.left = `${this.x}px`;
+      this.x = clamp(this.x + n, 0, screenWidth);
     },
     moveUp: function (n) {
-      this.y -= n;
-      this.y = clamp(this.y, 0, screenHeight);
-      this.div.style.top = `${this.y}px`;
+      this.y = clamp(this.y - n, 0, screenHeight);
     },
     moveDown: function (n) {
-      this.y += n;
-      this.y = clamp(this.y, 0, screenHeight);
-      this.div.style.top = `${this.y}px`;
-    },
-
-    setX: function (x) {
-      this.x = x;
-      this.div.style.left = `${this.x}px`;
-    },
-    setY: function (y) {
-      this.y = y;
-      this.div.style.top = `${this.y}px`;
-    },
-    setWidth: function (w) {
-      this.width = w;
-      this.div.style.width = `${this.width}px`;
-    },
-    setHeight: function (h) {
-      this.height = h;
-      this.div.style.height = `${this.height}px`;
+      this.y = clamp(this.y + n, 0, screenHeight);
     },
 
     collides: function (other) {
@@ -72,66 +79,73 @@ function createBlock(divName) {
   }
 }
 
-function obstacle(o1, o2) {
+function createObstacle(block1, block2) {
   return {
-    o1: o1,
-    o2: o2,
+    upperBlock: block1,
+    lowerBlock: block2,
     disabled: false,
-    visibility: "unset",
+
+    _visibility: "unset",
+    get visibility() {
+      return this._visibility;
+    },
+    set visibility(val) {
+      this.lowerBlock.div.style.visibility = val;
+      this.upperBlock.div.style.visibility = val;
+    },
 
     tick: function() {
       if (this.disabled)
         return;
 
-      o1.moveLeft(obstacleSpeed);
-      o2.moveLeft(obstacleSpeed);
+      this.upperBlock.moveLeft(obstacleSpeed);
+      this.lowerBlock.moveLeft(obstacleSpeed);
 
-      if (o1.x === 0) {
-        this.setX(screenWidth);
+      if (this.upperBlock.x === 0) {
+        this.x = screenWidth;
         this.disable();
       }
     },
-    setX: function(x) {
-      o1.setX(x);
-      o2.setX(x);
+
+    set x(value) {
+      this.lowerBlock.x = value;
+      this.upperBlock.x = value;
     },
+    get x() {
+      return this.upperBlock.x;
+    },
+
     randomizeY: function() {
       let r = parseInt(Math.random() * (screenHeight - gapSize));
 
-      this.o1.setY(0);
-      this.o1.setHeight(r);
-      this.o2.setY(r + gapSize);
-      this.o2.setHeight(screenHeight - gapSize - r);
+      this.upperBlock.y = 0;
+      this.upperBlock.height = r;
+      this.lowerBlock.y = r + gapSize;
+      this.lowerBlock.height = screenHeight - gapSize - r;
     },
 
     enable: function() {
       this.disabled = false;
-      this.setVisibility(true);
+      this.visibility = "unset";
     },
     disable: function() {
       this.disabled = true;
-      this.setVisibility(false);
+      this.visibility = "hidden";
     },
 
     collides: function(other) {
       if (this.disabled) return false;
-      return this.o1.collides(other) || this.o2.collides(other);
-    },
-
-    setVisibility: function(val) {
-      this.visibility = val ? "unset" : "hidden";
-      this.o1.div.style.visibility = this.visibility;
-      this.o2.div.style.visibility = this.visibility;
+      return this.upperBlock.collides(other) || this.lowerBlock.collides(other);
     },
   }
 }
 
 let player = createBlock('player-div');
 player.div.style.background = "red";
-player.setWidth(50);
-player.setHeight(50);
-player.setX(20);
-player.setY(parseInt((screenHeight - 50) / 2));
+player.width = 50;
+player.height = 50;
+player.x = 20;
+player.y = parseInt((screenHeight - 50) / 2);
 
 document.onkeydown = (e) => {
   switch (e.key) {
@@ -168,14 +182,14 @@ function getDisabledObstacle() {
 
   // Create new
   lastObstacleId += 1;
-  let oId1 = `obstacle${lastObstacleId}`;
-  let o1 = createObstacleBlock(oId1, gameArea);
+  let blockId1 = `obstacle${lastObstacleId}`;
+  let block1 = createObstacleBlock(blockId1, gameArea);
 
   lastObstacleId += 1;
-  let oId2 = `obstacle${lastObstacleId}`;
-  let o2 = createObstacleBlock(oId2, gameArea);
+  let blockId2 = `obstacle${lastObstacleId}`;
+  let block2 = createObstacleBlock(blockId2, gameArea);
 
-  let o = obstacle(o1, o2);
+  let o = createObstacle(block1, block2);
   o.disable();
   obstacles.push(o);
   return o;
@@ -187,8 +201,8 @@ function Update() {
   for (let o of obstacles) {
     if (o.disabled) continue;
 
-    if (o.o1.x > lastObstacleX)
-      lastObstacleX = o.o1.x;
+    if (o.x > lastObstacleX)
+      lastObstacleX = o.x;
 
     o.tick();
 
@@ -199,7 +213,7 @@ function Update() {
 
   if ((screenWidth - lastObstacleX) > obstaclesDistance) {
     let o = getDisabledObstacle();
-    o.setX(screenWidth);
+    o.x = screenWidth;
     o.randomizeY();
     o.enable();
   }

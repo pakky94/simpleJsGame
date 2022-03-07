@@ -1,3 +1,4 @@
+const gameArea = document.getElementById("game-area");
 const screenWidth = 600, screenHeight = 400;
 let playerSpeed = 5;
 let obstaclesDistance = parseInt(screenWidth / 2);
@@ -5,7 +6,8 @@ let obstacleSpeed = 10;
 let tickSpeed = 400;
 let gapSize = 150;
 
-let gameArea = document.getElementById("game-area");
+let obstacles = [];
+
 
 function createBlock(divName) {
   let x = 0, y = 0;
@@ -94,7 +96,12 @@ function obstacle(o1, o2) {
       o2.setX(x);
     },
     randomizeY: function() {
-      setObstaclePairRandomPos(this, gapSize);
+      let r = parseInt(Math.random() * (screenHeight - gapSize));
+
+      this.o1.setY(0);
+      this.o1.setHeight(r);
+      this.o2.setY(r + gapSize);
+      this.o2.setHeight(screenHeight - gapSize - r);
     },
 
     enable: function() {
@@ -141,27 +148,6 @@ document.onkeydown = (e) => {
       player.moveRight(playerSpeed);
       break;
   }
-}
-
-function setObstaclePairRandomPos(oPair, gapSize) {
-  let r = randomObsPos(gapSize);
-  oPair.o1.setY(r.y1);
-  oPair.o1.setHeight(r.h1);
-  oPair.o2.setY(r.y2);
-  oPair.o2.setHeight(r.h2);
-}
-
-let obstacles = [];
-
-function randomObsPos(gapSize = 150) {
-  let r = parseInt(Math.random() * (screenHeight - gapSize));
-
-  return {
-    y1: 0,
-    h1: r,
-    y2: r + gapSize,
-    h2: screenHeight - gapSize - r
-  };
 }
 
 function createObstacleBlock(id, parent) {

@@ -9,7 +9,9 @@ let obstacleSpeed = 10;
 let tickSpeed = 400;
 let gapSize = 150;
 
-let player = new Player(gameArea);
+let player = new Player(gameArea, playerSpeed);
+player.bindKeyEvents(document);
+
 let obstacles = [];
 
 function createObstacle(block1, block2) {

@@ -2,6 +2,9 @@ import { Player } from "./models/player.js";
 import { Obstacle } from "./models/obstacle.js";
 
 const gameArea = document.getElementById("game-area");
+const scoreOut = document.getElementById("score");
+let score = 0;
+
 const screenWidth = 600, screenHeight = 400;
 let playerSpeed = 5;
 let obstaclesDistance = parseInt(screenWidth / 2);
@@ -27,8 +30,19 @@ function getDisabledObstacle() {
   return o;
 }
 
+function reset() {
+  player.x = 20;
+  player.y = parseInt((screenHeight - 50) / 2);
+
+  for (let o of obstacles) {
+    o.disable();
+  }
+}
+
 function Update() {
   let lastObstacleX = 0;
+  score += 5;
+  scoreOut.innerText = score;
 
   for (let o of obstacles) {
     if (o.disabled) continue;
@@ -40,6 +54,7 @@ function Update() {
 
     if (o.collides(player)) {
       console.log("COLLISION");
+      reset();
     }
   }
 

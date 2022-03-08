@@ -1,4 +1,5 @@
 import { Block } from "./models/block.js";
+import { Player } from "./models/player.js";
 
 const gameArea = document.getElementById("game-area");
 const screenWidth = 600, screenHeight = 400;
@@ -8,6 +9,7 @@ let obstacleSpeed = 10;
 let tickSpeed = 400;
 let gapSize = 150;
 
+let player = new Player(gameArea);
 let obstacles = [];
 
 function createObstacle(block1, block2) {
@@ -29,10 +31,9 @@ function createObstacle(block1, block2) {
       if (this.disabled)
         return;
 
-      this.upperBlock.moveLeft(obstacleSpeed);
-      this.lowerBlock.moveLeft(obstacleSpeed);
+      this.x -= obstacleSpeed;
 
-      if (this.upperBlock.x === 0) {
+      if (this.upperBlock.x <= 0) {
         this.x = screenWidth;
         this.disable();
       }
@@ -70,13 +71,6 @@ function createObstacle(block1, block2) {
     },
   }
 }
-
-let player = new Block(gameArea);
-player.div.style.background = "red";
-player.width = 50;
-player.height = 50;
-player.x = 20;
-player.y = parseInt((screenHeight - 50) / 2);
 
 document.onkeydown = (e) => {
   switch (e.key) {

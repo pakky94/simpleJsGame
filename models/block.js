@@ -1,8 +1,9 @@
-const screenWidth = 600, screenHeight = 400;
-
 export class Block {
   constructor(parent) {
     this._parent = parent;
+    this._parentWidth = parseInt(parent.style.width);
+    this._parentHeight = parseInt(parent.style.height);
+
     this._x = 0;
     this._y = 0;
     this._width = 20;
@@ -48,30 +49,9 @@ export class Block {
     this.div.style.height = `${value}px`;
   }
 
-  moveLeft(n) {
-    this.x = clamp(this.x - n, 0, screenWidth);
-  }
-  moveRight(n) {
-    this.x = clamp(this.x + n, 0, screenWidth - this.width);
-  }
-  moveUp(n) {
-    this.y = clamp(this.y - n, 0, screenHeight);
-  }
-  moveDown(n) {
-    this.y = clamp(this.y + n, 0, screenHeight - this.width);
-  }
-
   collides(other) {
     let xCross = (this.x <= (other.x + other.width)) && ((this.x + this.width) >= other.x);
     let yCross = (this.y <= (other.y + other.height)) && ((this.y + this.height) >= other.y);
     return xCross && yCross;
   }
-}
-
-function clamp(val, low, high) {
-  if (val < low)
-    return low;
-  if (val > high)
-    return high;
-  return val;
 }

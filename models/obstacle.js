@@ -1,13 +1,10 @@
 import { Block } from "./block.js";
 
 export class Obstacle {
-  constructor(parent, speed = 10, gapSize = 150) {
+  constructor(parent) {
     this._parent = parent;
     this._parentWidth = parseInt(parent.style.width);
     this._parentHeight = parseInt(parent.style.height);
-
-    this.speed = speed;
-    this.gapSize = gapSize;
 
     this.upperBlock = new Block(parent);
     this.lowerBlock = new Block(parent);
@@ -23,17 +20,6 @@ export class Obstacle {
     this.upperBlock.div.style.visibility = val;
   }
 
-  tick() {
-    if (this.disabled)
-      return;
-
-    this.x -= this.speed;
-
-    if (this.upperBlock.x <= 0) {
-      this.disable();
-    }
-  }
-
   set x(value) {
     this.lowerBlock.x = value;
     this.upperBlock.x = value;
@@ -42,13 +28,13 @@ export class Obstacle {
     return this.upperBlock.x;
   }
 
-  randomizeY() {
-    let r = parseInt(Math.random() * (this._parentHeight - this.gapSize));
+  randomizeY(gapSize) {
+    let r = parseInt(Math.random() * (this._parentHeight - gapSize));
 
     this.upperBlock.y = 0;
     this.upperBlock.height = r;
-    this.lowerBlock.y = r + this.gapSize;
-    this.lowerBlock.height = this._parentHeight - this.gapSize - r;
+    this.lowerBlock.y = r + gapSize;
+    this.lowerBlock.height = this._parentHeight - gapSize - r;
   }
 
   enable() {

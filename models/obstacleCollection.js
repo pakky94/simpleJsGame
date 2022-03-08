@@ -1,41 +1,27 @@
 import { Obstacle } from "./obstacle.js";
 
 export class ObstacleCollection {
-  constructor(parent, obstacleSpeed = 10, gapSize = 150) {
+  constructor(parent) {
     this.obstacles = []
     this._parent = parent;
-    this._obstacleSpeed = obstacleSpeed;
-    this._gapSize = gapSize;
-  }
-
-  get obstacleSpeed() { return this._obstacleSpeed; }
-  set obstacleSpeed(value) {
-    this._obstacleSpeed = value;
-    for (let o of this.obstacles)
-      o.speed = value;
-  }
-
-  get gapSize() { return this._gapSize; }
-  set obstacleSpeed(value) {
-    this._gapSize = value;
-    for (let o of this.obstacles)
-      o.gapSize = value;
   }
 
   moveAllLeft(value) {
     for (let o of this.obstacles) {
-      o.tick();
-      //if (o.disabled)
-        //continue;
+      if (o.disabled)
+        continue;
 
-      //o.x -= value;
+      o.x -= value;
+      if (o.x <= 0) {
+        o.disable();
+      }
     }
   }
 
   createNewRandomized(position, gapSize) {
     let o = this.getNew();
     o.x = position;
-    o.randomizeY();
+    o.randomizeY(gapSize);
     o.enable();
   }
 

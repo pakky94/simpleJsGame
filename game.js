@@ -1,5 +1,5 @@
-import { Block } from "./models/block.js";
 import { Player } from "./models/player.js";
+import { Obstacle } from "./models/obstacle.js";
 
 const gameArea = document.getElementById("game-area");
 const screenWidth = 600, screenHeight = 400;
@@ -14,83 +14,6 @@ player.bindKeyEvents(document);
 
 let obstacles = [];
 
-function createObstacle(block1, block2) {
-  return {
-    upperBlock: block1,
-    lowerBlock: block2,
-    disabled: false,
-
-    _visibility: "unset",
-    get visibility() {
-      return this._visibility;
-    },
-    set visibility(val) {
-      this.lowerBlock.div.style.visibility = val;
-      this.upperBlock.div.style.visibility = val;
-    },
-
-    tick: function () {
-      if (this.disabled)
-        return;
-
-      this.x -= obstacleSpeed;
-
-      if (this.upperBlock.x <= 0) {
-        this.x = screenWidth;
-        this.disable();
-      }
-    },
-
-    set x(value) {
-      this.lowerBlock.x = value;
-      this.upperBlock.x = value;
-    },
-    get x() {
-      return this.upperBlock.x;
-    },
-
-    randomizeY: function () {
-      let r = parseInt(Math.random() * (screenHeight - gapSize));
-
-      this.upperBlock.y = 0;
-      this.upperBlock.height = r;
-      this.lowerBlock.y = r + gapSize;
-      this.lowerBlock.height = screenHeight - gapSize - r;
-    },
-
-    enable: function () {
-      this.disabled = false;
-      this.visibility = "unset";
-    },
-    disable: function () {
-      this.disabled = true;
-      this.visibility = "hidden";
-    },
-
-    collides: function (other) {
-      if (this.disabled) return false;
-      return this.upperBlock.collides(other) || this.lowerBlock.collides(other);
-    },
-  }
-}
-
-document.onkeydown = (e) => {
-  switch (e.key) {
-    case "ArrowUp":
-      player.moveUp(playerSpeed);
-      break;
-    case "ArrowDown":
-      player.moveDown(playerSpeed);
-      break;
-    case "ArrowLeft":
-      player.moveLeft(playerSpeed);
-      break;
-    case "ArrowRight":
-      player.moveRight(playerSpeed);
-      break;
-  }
-}
-
 function getDisabledObstacle() {
   for (let o of obstacles) {
     if (o.disabled)
@@ -98,7 +21,7 @@ function getDisabledObstacle() {
   }
 
   // Create new
-  let o = createObstacle(new Block(gameArea), new Block(gameArea));
+  let o = new Obstacle(gameArea, obstacleSpeed, gapSize);
   o.disable();
   obstacles.push(o);
   return o;

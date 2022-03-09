@@ -14,8 +14,10 @@
 
 .barrier {
     background: green;
+    z-index: 2;
 }
 
 .bullet {
     background: blue;
+    z-index: 5;
 }

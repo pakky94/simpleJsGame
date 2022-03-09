@@ -12,6 +12,10 @@ export class Barrier {
     this.x = position;
   }
 
+  moveLeft(value) {
+    this.x -= value;
+  }
+
   get x() {
     return this.upperBlock.x;
   }

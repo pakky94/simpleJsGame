@@ -31,7 +31,8 @@ export class Game {
         this.player.processKeys(this.keyboard);
 
         this.obstacles.moveAllLeft(this.state.obstacleSpeed);
-        this.obstacles.addNewObstacleIfGap(this.state.obstaclesDistance, this.state.gapSize);
+        this.obstacles.addNewBarrierIfGap(this.state.obstaclesDistance, this.state.gapSize);
+        this.obstacles.addBulletWithProbability(this.state.bulletChance);
 
         if (this.obstacles.collides(this.player)) {
           this.currentStep = "death";

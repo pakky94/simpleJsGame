@@ -1,4 +1,5 @@
 import { Barrier } from "./barrier.js";
+import { Bullet } from "./bullet.js";
 
 export class ObstacleCollection {
   constructor(parent, screenWidth) {
@@ -9,7 +10,7 @@ export class ObstacleCollection {
 
   moveAllLeft(value) {
     for (let o of this.obstacles) {
-      o.x -= value;
+      o.moveLeft(value);
 
       if (o.x <= 0)
         o.destroy();
@@ -17,8 +18,13 @@ export class ObstacleCollection {
     this.obstacles = this.obstacles.filter(o => o.x > 0);
   }
 
-  addNewObstacleIfGap(gap, gapSize) {
-    if (this._screenWidth - this.lastObstacleX() >= gap) {
+  addBulletWithProbability(chance) {
+    if (Math.random() < chance)
+      this.obstacles.push(new Bullet(this._parent))
+  }
+
+  addNewBarrierIfGap(gap, gapSize) {
+    if (this._screenWidth - this.lastBarrierX() >= gap) {
       this.createNewBarrier(this._screenWidth, gapSize);
     }
   }
@@ -37,8 +43,8 @@ export class ObstacleCollection {
     return false;
   }
 
-  lastObstacleX() {
-    return Math.max(this.obstacles.map(o => o.x))
+  lastBarrierX() {
+    return Math.max(this.obstacles.filter(o => o instanceof Barrier).map(o => o.x));
   }
 
   destroyAll() {

@@ -18,4 +18,8 @@ export class GameState {
   get obstacleSpeed() {
     return 1.2 + (this.score / 2000);
   }
+
+  get bulletChance() {
+    return 0.01 * (1 + this.score * 0.00001);
+  }
 }

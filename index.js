@@ -11,9 +11,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("play-btn").onclick = () => game.play();
     document.getElementById("pause-btn").onclick = () => game.pause();
     document.getElementById("reset-btn").onclick = () => game.reset();
-    game.ondeath = () => document.getElementById("death-audio").play();
+    game.ondeath = playDeathSound;
 
     game.state.onscoreupdated = score => scoreOut.updateScore(score);
 
     setInterval(() => game.tick(), tickSpeed);
+
+    function playDeathSound() {
+        let audio = document.getElementById("death-audio");
+        audio.volume = 0.5;
+        audio.play();
+    }
 });

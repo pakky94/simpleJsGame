@@ -1,16 +1,13 @@
 import { Block } from "./block.js";
 
 export class Player extends Block {
-  constructor(parent, speed) {
-    super(parent);
+  constructor(parent, speed = 5) {
+    super(parent, "player");
 
     this.speed = speed;
 
-    this.div.style.background = "red";
     this.width = 50;
     this.height = 50;
-    this.x = 20;
-    this.y = parseInt((this._parentHeight - 50) / 2);
   }
 
   moveLeft() {
@@ -26,9 +23,9 @@ export class Player extends Block {
     this.y = clamp(this.y + this.speed, 0, this._parentHeight - this.height);
   }
 
-  bindKeyEvents(to) {
-    to.onkeydown = (e) => {
-      switch (e.key) {
+  processKeys(keyboard) {
+    keyboard.pressed.forEach(key => {
+      switch (key) {
         case "ArrowUp":
           this.moveUp();
           break;
@@ -41,11 +38,9 @@ export class Player extends Block {
         case "ArrowRight":
           this.moveRight();
           break;
-      }
-    }
+      }});
   }
 }
-
 
 function clamp(val, low, high) {
   if (val < low)

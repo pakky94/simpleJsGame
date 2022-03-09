@@ -1,20 +1,20 @@
 export class Block {
-  constructor(parent) {
+  constructor(parent, className) {
     this._parent = parent;
     this._parentWidth = parseInt(parent.style.width);
     this._parentHeight = parseInt(parent.style.height);
 
-    this._x = 0;
-    this._y = 0;
-    this._width = 20;
-    this._height = 50;
-
     this.div = document.createElement('div');
     this.div.style.position = "absolute";
-    this.div.style.background = "green";
-    this.div.style.width = `${this._width}px`
-    this.div.style.height = `${this._height}px`
-    parent.appendChild(this.div);
+    if (className !== undefined)
+      this.div.classList.add(className);
+
+    this._parent.appendChild(this.div);
+
+    this.x = 0;
+    this.y = 0;
+    this.width = 20;
+    this.height = 50;
   }
 
   get x() {
@@ -53,5 +53,9 @@ export class Block {
     let xCross = (this.x <= (other.x + other.width)) && ((this.x + this.width) >= other.x);
     let yCross = (this.y <= (other.y + other.height)) && ((this.y + this.height) >= other.y);
     return xCross && yCross;
+  }
+
+  destroy() {
+    this._parent.removeChild(this.div);
   }
 }

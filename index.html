@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #score {
+            z-index: 10;
+            width: 50px;
+            text-align: right;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        #game-area {
+            margin: 20px auto;
+        }
+
+        #controls {
+            display: flex;
+            margin: 20px auto;
+            justify-content: center;
+        }
+
+        .player {
+            background: red;
+        }
+
+        .barrier {
+            background: green;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-area" style="width: 600px; height: 400px; background: #DDD; position: relative; overflow: hidden">
+        <div id="score"></div>
+    </div>
+    <div id="controls">
+        <button id="play-btn">Play</button>
+        <button id="pause-btn">Pause</button>
+        <button id="reset-btn">Reset</button>
+    </div>
+</body>
+<script src="./game.js" type="module"></script>
+</html>

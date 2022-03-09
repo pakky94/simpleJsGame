@@ -1,9 +1,10 @@
 import { Barrier } from "./barrier.js";
 
 export class ObstacleCollection {
-  constructor(parent) {
+  constructor(parent, screenWidth) {
     this.obstacles = []
     this._parent = parent;
+    this._screenWidth = screenWidth;
   }
 
   moveAllLeft(value) {
@@ -14,6 +15,12 @@ export class ObstacleCollection {
         o.destroy();
     }
     this.obstacles = this.obstacles.filter(o => o.x > 0);
+  }
+
+  addNewObstacleIfGap(gap, gapSize) {
+    if (this._screenWidth - this.lastObstacleX() >= gap) {
+      this.createNewBarrier(this._screenWidth, gapSize);
+    }
   }
 
   createNewBarrier(position, gapSize) {

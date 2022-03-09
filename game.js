@@ -1,12 +1,13 @@
 import { Player } from "./models/player.js";
 import { ObstacleCollection } from "./models/obstacleCollection.js";
 import { Keyboard } from "./keyboard.js";
+import { ScoreOutput } from "./models/scoreOutput.js";
 
 const screenWidth = 600, screenHeight = 400;
 
 document.addEventListener('DOMContentLoaded', () => {
   const gameArea = document.getElementById("game-area");
-  const scoreOut = document.getElementById("score");
+  const scoreOut = new ScoreOutput("score");
 
   let tickSpeed = 15;
 
@@ -14,6 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById("play-btn").onclick = () => game.play();
   document.getElementById("pause-btn").onclick = () => game.pause();
   document.getElementById("reset-btn").onclick = () => game.reset();
+  game.ondeath = () => document.getElementById("death-audio").play();
+
+  game.state.onscoreupdated = score => scoreOut.updateScore(score);
 
   setInterval(() => game.tick(), tickSpeed);
 });
@@ -26,12 +30,13 @@ class GameState {
     this.playerSpeed = 5;
     this.obstaclesDistance = parseInt(screenWidth / 2);
     this.gapSize = 150;
+    this.onscoreupdated = null;
   }
 
   get score() { return this._score; }
   set score(val) {
     this._score = val;
-    this.scoreOut.innerText = val;
+    this.onscoreupdated?.(val);
   }
 
   get obstacleSpeed() {
@@ -46,7 +51,7 @@ class Game {
     this.state = new GameState(scoreOut);
     this.player = new Player(gameArea);
     this.keyboard = new Keyboard();
-    this.obstacles = new ObstacleCollection(gameArea);
+    this.obstacles = new ObstacleCollection(gameArea, screenWidth);
   }
 
   tick() {
@@ -64,16 +69,17 @@ class Game {
         this.player.processKeys(this.keyboard);
 
         this.obstacles.moveAllLeft(this.state.obstacleSpeed);
-
-        if ((screenWidth - this.obstacles.lastObstacleX()) > this.state.obstaclesDistance) {
-          this.obstacles.createNewBarrier(screenWidth, this.state.gapSize);
-        }
+        this.obstacles.addNewObstacleIfGap(this.state.obstaclesDistance, this.state.gapSize);
 
         if (this.obstacles.collides(this.player)) {
-          this.currentStep = "gameover";
+          this.currentStep = "death";
         }
         break;
       case "paused":
+        break;
+      case "death":
+        this.ondeath?.();
+        this.currentStep = "gameover";
         break;
       case "gameover":
         break;
@@ -81,7 +87,7 @@ class Game {
   }
 
   play() {
-    if (this.currentStep === "gameover")
+    if (this.currentStep === "gameover" || this.currentStep === "death")
       this.currentStep = "init"
     else if (this.currentStep === "paused")
       this.currentStep = "playing"

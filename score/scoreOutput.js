@@ -19,6 +19,9 @@ export class ScoreOutput {
   }
 
   isAnimationThreshold() {
+    if (this._lastScore > this._currentScore)
+      return false;
+
     const lastMilestone = parseInt(this._lastScore / this._animationThreshold);
     const currentMilestone = parseInt(this._currentScore / this._animationThreshold);
     return lastMilestone !== currentMilestone;

@@ -11,16 +11,16 @@ export class Player extends Block {
   }
 
   moveLeft() {
-    this.x = clamp(this.x - this.speed, 0, this._parentWidth);
+    this.x = clamp(this.x - this.speed, 0, this._parent.clientWidth);
   }
   moveRight() {
-    this.x = clamp(this.x + this.speed, 0, this._parentWidth - this.width);
+    this.x = clamp(this.x + this.speed, 0, this._parent.clientWidth - this.width);
   }
   moveUp() {
-    this.y = clamp(this.y - this.speed, 0, this._parentHeight);
+    this.y = clamp(this.y - this.speed, 0, this._parent.clientHeight);
   }
   moveDown() {
-    this.y = clamp(this.y + this.speed, 0, this._parentHeight - this.height);
+    this.y = clamp(this.y + this.speed, 0, this._parent.clientHeight - this.height);
   }
 
   processKeys(keyboard) {

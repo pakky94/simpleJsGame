@@ -1,15 +1,13 @@
 import { Block } from "./block.js";
 
 export class Barrier {
-  constructor(parent, gapSize = 150, position = 0) {
+  constructor(parent, gapSize = 150) {
     this._parent = parent;
-    this._parentWidth = parseInt(parent.style.width);
-    this._parentHeight = parseInt(parent.style.height);
 
     this.upperBlock = new Block(parent, "barrier");
     this.lowerBlock = new Block(parent, "barrier");
     this.randomizeY(gapSize);
-    this.x = position;
+    this.x = this._parent.clientWidth;
   }
 
   moveLeft(value) {
@@ -25,12 +23,12 @@ export class Barrier {
   }
 
   randomizeY(gapSize) {
-    let r = parseInt(Math.random() * (this._parentHeight - gapSize));
+    let r = parseInt(Math.random() * (this._parent.clientHeight - gapSize));
 
     this.upperBlock.y = 0;
     this.upperBlock.height = r;
     this.lowerBlock.y = r + gapSize;
-    this.lowerBlock.height = this._parentHeight - gapSize - r;
+    this.lowerBlock.height = this._parent.clientHeight - gapSize - r;
   }
 
   collides(other) {

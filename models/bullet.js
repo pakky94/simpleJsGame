@@ -6,8 +6,8 @@ export class Bullet extends Block {
 
     this.width = 30;
     this.height = 30;
-    this.x = this._parentWidth;
-    this.y = Math.random() * (this._parentHeight - this.height);
+    this.x = this._parent.clientWidth;
+    this.y = Math.random() * (this._parent.clientHeight - this.height);
   }
 
   moveLeft(value) {

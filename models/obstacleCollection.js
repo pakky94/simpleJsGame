@@ -30,7 +30,7 @@ export class ObstacleCollection {
   }
 
   createNewBarrier(position, gapSize) {
-    this.obstacles.push(new Barrier(this._parent, gapSize, position));
+    this.obstacles.push(new Barrier(this._parent, gapSize));
   }
 
   collides(other) {

@@ -1,8 +1,6 @@
 export class Block {
   constructor(parent, className) {
     this._parent = parent;
-    this._parentWidth = parseInt(parent.style.width);
-    this._parentHeight = parseInt(parent.style.height);
 
     this.div = document.createElement('div');
     this.div.style.position = "absolute";

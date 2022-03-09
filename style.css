@@ -1,0 +1,17 @@
+#game-area {
+    margin: 20px auto;
+}
+
+#controls {
+    display: flex;
+    margin: 20px auto;
+    justify-content: center;
+}
+
+.player {
+    background: red;
+}
+
+.barrier {
+    background: green;
+}

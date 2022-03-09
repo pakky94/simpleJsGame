@@ -1,0 +1,15 @@
+#score-div {
+    z-index: 10;
+    width: 50px;
+    text-align: right;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+#score-div.animated {
+    transform: scale(1.7, 1.7);
+    transform-origin: top right;
+    transition-property: transform;
+    transition-duration: 1s;
+}

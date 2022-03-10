@@ -1,4 +1,6 @@
 export class Block {
+  #x; #y; #width; #height;
+
   constructor(parent, className) {
     this._parent = parent;
 
@@ -16,34 +18,34 @@ export class Block {
   }
 
   get x() {
-    return this._x;
+    return this.#x;
   }
   set x(value) {
-    this._x = value;
+    this.#x = value;
     this.div.style.left = `${value}px`;
   }
 
   get y() {
-    return this._y;
+    return this.#y;
   }
   set y(value) {
-    this._y = value;
+    this.#y = value;
     this.div.style.top = `${value}px`;
   }
 
   get width() {
-    return this._width;
+    return this.#width;
   }
   set width(value) {
-    this._width = value;
+    this.#width = value;
     this.div.style.width = `${value}px`;
   }
 
   get height() {
-    return this._height;
+    return this.#height;
   }
   set height(value) {
-    this._height = value;
+    this.#height = value;
     this.div.style.height = `${value}px`;
   }
 

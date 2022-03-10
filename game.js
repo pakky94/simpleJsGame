@@ -2,6 +2,7 @@ import { Player } from "./models/player.js";
 import { ObstacleCollection } from "./models/obstacleCollection.js";
 import { Keyboard } from "./keyboard.js";
 import { GameState } from "./gameState.js";
+import { GameOverOverlay, PauseOverlay } from "./overlay.js";
 
 export class Game {
   constructor(gameArea, scoreOut) {
@@ -14,20 +15,25 @@ export class Game {
     this.player = new Player(gameArea);
     this.keyboard = new Keyboard();
     this.obstacles = new ObstacleCollection(gameArea, this._screenWidth);
+
+    this.gameOverOverlay = new GameOverOverlay(gameArea);
+    this.pauseOverlay = new PauseOverlay(gameArea, () => this.play());
   }
 
   tick() {
     switch (this.currentStep) {
       case "init":
-        this.state.score = 0;
+        this.state.score.reset();
         this.player.x = 20;
         this.player.y = parseInt((this._screenHeight - 50) / 2);
         this.obstacles.destroyAll();
 
+        this.gameOverOverlay.hide();
+
         this.currentStep = "playing";
         break;
       case "playing":
-        this.state.score += 1;
+        this.state.score.increase();
         this.player.processKeys(this.keyboard);
 
         this.obstacles.moveAllLeft(this.state.obstacleSpeed);
@@ -45,20 +51,26 @@ export class Game {
         this.currentStep = "gameover";
         break;
       case "gameover":
+        this.gameOverOverlay.show(this.state.score.current);
         break;
     }
   }
 
   play() {
-    if (this.currentStep === "gameover" || this.currentStep === "death")
-      this.currentStep = "init"
-    else if (this.currentStep === "paused")
-      this.currentStep = "playing"
+    if (this.currentStep === "gameover" || this.currentStep === "death") {
+      this.currentStep = "init";
+    }
+    else if (this.currentStep === "paused") {
+      this.currentStep = "playing";
+      this.pauseOverlay.hide();
+    }
   }
 
   pause() {
-    if (this.currentStep === "playing")
+    if (this.currentStep === "playing") {
       this.currentStep = "paused"
+      this.pauseOverlay.show();
+    }
   }
 
   reset() {

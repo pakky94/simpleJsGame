@@ -1,7 +1,7 @@
 export class Block {
   #x; #y; #width; #height;
 
-  constructor(parent, className) {
+  constructor(parent, className, x = 0, y = 0, height = 50, width = 20) {
     this._parent = parent;
 
     this.div = document.createElement('div');
@@ -11,10 +11,10 @@ export class Block {
 
     this._parent.appendChild(this.div);
 
-    this.x = 0;
-    this.y = 0;
-    this.width = 20;
-    this.height = 50;
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
   }
 
   get x() {

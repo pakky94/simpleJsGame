@@ -1,25 +1,23 @@
 export class GameState {
-  constructor(scoreOut) {
-    this.scoreOut = scoreOut;
+  #score;
 
-    this.score = 0;
+  constructor(score) {
+    this.#score = score;
+
     this.playerSpeed = 5;
     this.obstaclesDistance = 300;
     this.gapSize = 150;
-    this.onscoreupdated = null;
   }
 
-  get score() { return this._score; }
-  set score(val) {
-    this._score = val;
-    this.onscoreupdated?.(val);
+  get score() {
+    return this.#score;
   }
 
   get obstacleSpeed() {
-    return 1.2 + (this.score / 2000);
+    return 1.2 + (this.score.current / 2000);
   }
 
   get bulletChance() {
-    return 0.01 * (1 + this.score * 0.00001);
+    return 0.01 * (1 + this.score.current * 0.00001);
   }
 }
